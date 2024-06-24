@@ -27,6 +27,7 @@ import { ItemStatus, LinkStatus, VisualizationStatus, calcDistance } from 'utils
 import {
   getLabelValue, getClusterKeys, getWeightKeys, getScoreKeys, getColorScheme, getNiceMinValue, getNiceMaxValue
 } from 'utils/helpers';
+import { cleanPlainText } from 'utils/helpers2';
 
 export default class State {
   constructor(state = {}) {
@@ -191,7 +192,7 @@ export default class State {
       item._status = ItemStatus.DEFAULT;
 
       item.id = _isNaN(_toNumber(item.id)) ? item.id : _toNumber(item.id);
-      item.label = getLabelValue(item);
+      item.label = cleanPlainText(getLabelValue(item));
       item._normalizedScore = undefined;
     });
 
