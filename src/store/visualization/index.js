@@ -1,5 +1,4 @@
 /* eslint-disable no-bitwise */
-import HTMLReactParser from 'html-react-parser';
 import { makeAutoObservable } from 'mobx';
 import { scaleLinear, scaleOrdinal } from 'd3-scale';
 import { extent, sum } from 'd3-array';
@@ -568,8 +567,7 @@ export default class State {
       item._fontSize = this.pixelRatio * (scale * labelMinFontSize + labelFontSizeScalingConstant * item._normalizedWeight ** itemSizeVariation);
       if (this.labelCanvasContext) {
         this.labelCanvasContext.font = `${item._fontSize}px ${fontFamily}`;
-        const label = HTMLReactParser(item.label);
-        item._labelText = (label || '').slice(0, maxLabelLength) || '';
+        item._labelText = (item.label || '').slice(0, maxLabelLength) || '';
         item._labelTextWidth = this.labelCanvasContext.measureText(item._labelText).width;
       }
     });
