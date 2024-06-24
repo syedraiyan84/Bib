@@ -45,8 +45,13 @@ const ClusterColorLegend = observer(({ showTopClustersOnly, canvasWidth, legendW
   }, [ctx, mouseCoord, font, showTopClustersOnly, uiStore.darkTheme, visualizationStore.lastItemUpdate]);
 
   const getLegendItems = () => {
-    const arr = Array.from(dataStore.clusters, ([key, value]) => ({ key, value }));
-    return showTopClustersOnly ? arr.slice(0, 6) : arr;
+    const legendItems = [];
+    dataStore.clusters.forEach((value, key) => {
+      if (visualizationStore.clusterColorScheme.domain().includes(key)) {
+        legendItems.push({ key, value });
+      }
+    });
+    return showTopClustersOnly ? legendItems.slice(0, 6) : legendItems;
   };
 
   const draw = () => {
