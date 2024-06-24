@@ -466,8 +466,17 @@ export default class State {
 
   updateClusterColors(darkTheme) {
     const clusterColors = darkTheme ? this.darkClusterColors : this.lightClusterColors;
-    this.clusterColorScheme.range(clusterColors);
-    if (this.clusters) this.clusterColorScheme.domain(this.clusters.slice(0, clusterColors.length));
+    if (this.clusters) {
+      const clusterColors2 = [];
+      for (let i = 0; i < this.clusters.length; i++) {
+        const clusterIndex = this.clusters[i] - 1;
+        if (clusterIndex < clusterColors.length) {
+          clusterColors2.push(clusterColors[clusterIndex]);
+        }
+      }
+      this.clusterColorScheme.range(clusterColors2);
+      this.clusterColorScheme.domain(this.clusters.slice(0, clusterColors2.length));
+    }
     this.updateItemClusterColor();
   }
 
