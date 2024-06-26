@@ -1,5 +1,4 @@
 /* eslint-disable no-bitwise */
-import HTMLReactParser from 'html-react-parser';
 import { makeAutoObservable } from 'mobx';
 import { scaleLinear, scaleOrdinal } from 'd3-scale';
 import { extent, sum } from 'd3-array';
@@ -27,6 +26,7 @@ import { ItemStatus, LinkStatus, VisualizationStatus, calcDistance } from 'utils
 import {
   getLabelValue, getClusterKeys, getWeightKeys, getScoreKeys, getColorScheme, getNiceMinValue, getNiceMaxValue
 } from 'utils/helpers';
+import { cleanPlainText } from 'utils/helpers2';
 
 export default class State {
   constructor(state = {}) {
@@ -191,7 +191,7 @@ export default class State {
       item._status = ItemStatus.DEFAULT;
 
       item.id = _isNaN(_toNumber(item.id)) ? item.id : _toNumber(item.id);
-      item.label = getLabelValue(item);
+      item.label = cleanPlainText(getLabelValue(item));
       item._normalizedScore = undefined;
     });
 
@@ -567,8 +567,7 @@ export default class State {
       item._fontSize = this.pixelRatio * (scale * labelMinFontSize + labelFontSizeScalingConstant * item._normalizedWeight ** itemSizeVariation);
       if (this.labelCanvasContext) {
         this.labelCanvasContext.font = `${item._fontSize}px ${fontFamily}`;
-        const label = HTMLReactParser(item.label);
-        item._labelText = (label || '').slice(0, maxLabelLength) || '';
+        item._labelText = (item.label || '').slice(0, maxLabelLength) || '';
         item._labelTextWidth = this.labelCanvasContext.measureText(item._labelText).width;
       }
     });
