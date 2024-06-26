@@ -182,7 +182,7 @@ export default class State {
     this.scoreKey = this.scoreKeys.length ? this.scoreKeys[this.scoreIndex] : undefined;
     this.clusterKeyIndex = 0;
     this.clusterKey = this.clusterKeys.length ? this.clusterKeys[this.clusterKeyIndex] : undefined;
-    this.clusters = this.clusterKey ? _uniq(_filter(mapData.map(item => item[this.clusterKey]), d => d !== null)).sort((a, b) => a - b) : undefined;
+    this.clusters = this.clusterKey ? _uniq(_filter(mapData.map(item => item[this.clusterKey]), d => !_isNil(d))).sort((a, b) => a - b) : undefined;
 
     this.items = _cloneDeep(mapData);
     _each(this.items, (item, i) => {
@@ -466,8 +466,17 @@ export default class State {
 
   updateClusterColors(darkTheme) {
     const clusterColors = darkTheme ? this.darkClusterColors : this.lightClusterColors;
-    this.clusterColorScheme.range(clusterColors);
-    if (this.clusters) this.clusterColorScheme.domain(this.clusters.slice(0, clusterColors.length));
+    if (this.clusters) {
+      const clusterColors2 = [];
+      for (let i = 0; i < this.clusters.length; i++) {
+        const clusterIndex = this.clusters[i] - 1;
+        if (clusterIndex < clusterColors.length) {
+          clusterColors2.push(clusterColors[clusterIndex]);
+        }
+      }
+      this.clusterColorScheme.range(clusterColors2);
+      this.clusterColorScheme.domain(this.clusters.slice(0, clusterColors2.length));
+    }
     this.updateItemClusterColor();
   }
 
@@ -801,7 +810,7 @@ export default class State {
       const cluster = clusters[this.itemIdToIndex[item.id]];
       item[this.clusterKey] = !_isNil(cluster) ? cluster + 1 : undefined;
     });
-    this.clusters = _filter(_keys(_groupBy(this.items, this.clusterKey)), d => d !== "undefined");
+    this.clusters = _uniq(_filter(this.items.map(item => item[this.clusterKey]), d => !_isNil(d))).sort((a, b) => a - b);
     this.updateClusterColors(darkTheme);
   }
 
