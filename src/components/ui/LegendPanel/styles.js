@@ -33,6 +33,7 @@ export const colorLegend = css`
   display: inline-block;
   cursor: pointer;
   pointer-events: all;
+  z-index: 1;
 `;
 
 export const sizeLegend = (width, scoreColorLegendIsVisible, clusterColorLegendIsVisible) => {
@@ -45,5 +46,6 @@ export const sizeLegend = (width, scoreColorLegendIsVisible, clusterColorLegendI
   margin-left: ${marginLeft}px;
   margin-top: auto;
   margin-bottom: auto;
+  z-index: 0;
 `;
 };
