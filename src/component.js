@@ -205,7 +205,10 @@ const VOSviewer = withResizeDetector(observer(({ width, targetRef, parameters = 
 
   function _showItem() {
     const filteredItems = visualizationStore.items.filter(item => item.label.toLowerCase().indexOf(uiStore.showItem.toLowerCase()) !== -1);
-    const sortedItems = levenSort(filteredItems, uiStore.showItem.toLowerCase(), 'label');
+    filteredItems.forEach((item) => {
+      item._labelInLowerCase = item.label.toLowerCase();
+    });
+    const sortedItems = levenSort(filteredItems, uiStore.showItem.toLowerCase(), '_labelInLowerCase');
     const foundItem = sortedItems[0];
     if (foundItem) {
       setTimeout(() => {
